@@ -61,7 +61,7 @@ const Challengers = ({
                     />
                 )}
             </div>
-            {challengerData.length > 0 ? (
+            {challengerData.data.length > 0 ? (
                 <div className="challenger-list">
                     {challengerData.data.map(
                         (challenger: BestChallengerProps, index: number) => (

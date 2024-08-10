@@ -30,7 +30,7 @@ const BestChallenger = () => {
                 title="베스트 챌린저"
                 desc="금주의 베스트 챌린저! 베스트 챌린저는 어떤 챌린지에 참여했을까요?"
             />
-            {topChallengersData.length > 0 ? (
+            {topChallengersData.data.length > 0 ? (
                 <div className="challenger-list">
                     {topChallengersData.data.map(
                         (challenger: BestChallengerProps, index: number) => (
