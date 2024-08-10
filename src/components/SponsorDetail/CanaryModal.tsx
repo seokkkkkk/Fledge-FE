@@ -29,7 +29,7 @@ function CanaryModal({
       image: Badge1,
     },
     {
-      category: ["취엄"],
+      category: ["취업"],
       title: "취업박람회 방문하기",
       date: "2024년 01월 01일 달성",
       image: Badge2,
@@ -62,7 +62,7 @@ function CanaryModal({
   ];
   return (
     <Overlay onClick={onClose}>
-      <Wrapper>
+      <Wrapper onClick={(e) => e.stopPropagation()}>
         <RowBox className="justify-between">
           <ColBox className="w-[298px]">
             <img
