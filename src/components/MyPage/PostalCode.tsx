@@ -18,21 +18,15 @@ interface PostalCodeProps {
 const PostalCode = ({ initialAddress, onChange }: PostalCodeProps) => {
     const [popup, setPopup] = useState(false);
 
-    const [form, setForm] = useState<postCode>({
-        address: "",
-        zonecode: "",
-        detailAddress: "",
-    });
+    const [form, setForm] = useState<postCode>(
+        initialAddress
+            ? initialAddress
+            : { address: "", detailAddress: "", zonecode: "" }
+    );
 
     const handlePopup = () => {
         setPopup(!popup);
     };
-
-    useEffect(() => {
-        if (initialAddress) {
-            setForm(initialAddress);
-        }
-    }, [initialAddress]);
 
     useEffect(() => {
         if (onChange && form.address !== initialAddress?.address) {
@@ -71,7 +65,7 @@ const PostalCode = ({ initialAddress, onChange }: PostalCodeProps) => {
                 <Input
                     hint="우편번호"
                     placeholder="12345"
-                    width="102px"
+                    width="104px"
                     value={form.zonecode}
                 />
                 <Button title="우편번호 검색" mainColor onClick={handlePopup} />

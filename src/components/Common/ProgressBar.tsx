@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import tw from "twin.macro";
 
 interface ProgressProps {
@@ -22,9 +22,18 @@ const Container = styled.div`
         border-2
         border-fontColor3
         rounded-[28px]
-        bg-[whilte]
+        bg-[white]
         relative
     `}
+`;
+
+const fillAnimation = (rate: number) => keyframes`
+    from {
+        width: 0;
+    }
+    to {
+        width: ${rate}%;
+    }
 `;
 
 const Progress = styled.div<ProgressProps>`
@@ -37,4 +46,5 @@ const Progress = styled.div<ProgressProps>`
         bg-fontColor3
         break-keep
     `}
+    animation: ${({ rate }) => fillAnimation(rate)} 1s ease-out forwards;
 `;

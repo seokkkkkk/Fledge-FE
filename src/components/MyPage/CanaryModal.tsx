@@ -9,7 +9,7 @@ import useAuthStore from "../../storage/useAuthStore";
 import { getPresignedUrl, uploadImageToS3 } from "../../apis/file-upload";
 import { postCanaryApply } from "../../apis/canary";
 
-interface postCode {
+export interface postCode {
     address: string;
     zonecode: number | string;
     detailAddress?: string;

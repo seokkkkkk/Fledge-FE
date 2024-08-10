@@ -125,7 +125,7 @@ const BadgeBoard = () => {
             <Header>
                 <span className="title">챌린지 달성 뱃지</span>
                 <span className="desc">
-                    00개의 챌린지를 성공적으로 마쳤어요. 성장하고 계시는군요!
+                    14개의 챌린지를 성공적으로 마쳤어요. 성장하고 계시는군요!
                 </span>
             </Header>
             <Body>

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import tw from "twin.macro";
 
 type ProgressProps = {
@@ -15,10 +15,7 @@ const Progress = ({
     return (
         <Container>
             <div className="progress-bar">
-                <div
-                    className="progress"
-                    style={{ width: `${successRate}%` }}
-                />
+                <ProgressFill successRate={successRate} />
             </div>
             <div className="text-field">
                 <p>
@@ -46,9 +43,21 @@ const Container = styled.div`
             w-[1280px] h-[15.41px] rounded-[28px] border-[3px] border-subColor shadow-[black] bg-white
         `}
     }
-    .progress {
-        ${tw`
-            h-full rounded-[28px] bg-subColor
-        `}
+`;
+
+const fillAnimation = (successRate: number) => keyframes`
+    from {
+        width: 0;
     }
+    to {
+        width: ${successRate}%;
+    }
+`;
+
+const ProgressFill = styled.div<{ successRate: number }>`
+    ${tw`
+        h-full rounded-[28px] bg-subColor
+    `}
+    animation: ${({ successRate }) =>
+        fillAnimation(successRate)} 1s ease-out forwards;
 `;

@@ -17,6 +17,7 @@ import RejectModal from "../components/ChallengeDetail/RejectModal";
 import CompleteModal from "../components/ChallengeDetail/CompleteModal";
 import Modal from "../components/ChallengeDetail/Modal";
 import Certification from "../components/ChallengeDetail/Certification";
+import { getCanaryStatus } from "../apis/canary";
 
 const ChallengeDetail = () => {
     const { userData, accessToken } = useAuthStore();
@@ -37,12 +38,18 @@ const ChallengeDetail = () => {
         queryKey: ["getChallengeDetail", challengeId, accessToken],
         queryFn: () => getChallengeDetail(challengeId!, accessToken),
     });
+    const { data: isCanary, isLoading: isCanaryLoading } = useQuery({
+        queryKey: ["getCanaryStatus", userData.id, accessToken],
+        queryFn: () => getCanaryStatus(userData.id!, accessToken!),
+    });
 
     const handleModalOpen = useCallback(() => {
-        if (userData.role === "CANARY") {
-            setIsModalOpen(true);
-        } else {
-            setFailModalOpen(true);
+        if (!isCanaryLoading) {
+            if (isCanary.data === 2) {
+                setIsModalOpen(true);
+            } else {
+                setFailModalOpen(true);
+            }
         }
     }, [userData.role]);
 
@@ -90,7 +97,7 @@ const ChallengeDetail = () => {
                         ChallengeDetailData.data.participantCount
                     }
                     successParticipants={ChallengeDetailData.data.successCount}
-                    successRate={ChallengeDetailData.data.successRate * 100}
+                    successRate={ChallengeDetailData.data.successRate}
                 />
                 <Challengers
                     challengeId={challengeId}

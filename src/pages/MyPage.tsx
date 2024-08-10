@@ -3,7 +3,7 @@ import tw from "twin.macro";
 
 import ProfileHeader from "../components/MyPage/Header";
 import UserBasicInfo from "../components/MyPage/UserBasicInfo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BadgeBoard from "../components/MyPage/BadgeBoard";
 import CanaryAuth from "../components/MyPage/CanaryAuth";
 import PersonalInfo from "../components/MyPage/PersonalInfo";
@@ -13,8 +13,9 @@ import Slider from "../components/Sponsor/Slider";
 import ContentHeader from "../components/Common/ContentHeader";
 import { useNavigate } from "react-router-dom";
 import phone from "../assets/demos/gosemvhs.png";
-import gimbap from "../assets/demos/tkarla.png";
 import DefaultLayout from "../components/Common/DefaultLayout";
+import { useQuery } from "@tanstack/react-query";
+import { getCanaryStatus } from "../apis/canary";
 
 const demoItems = [
     {
@@ -116,9 +117,22 @@ const demoItemsExpired = [
 
 function MyPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { userData } = useAuthStore.getState();
-    const isCanary = userData.role === "CANARY";
+    const { userData, accessToken } = useAuthStore.getState();
+    const [isCanary, setIsCanary] = useState(false);
     const navigate = useNavigate();
+
+    const { data: applyStatus, isLoading } = useQuery({
+        queryKey: ["getCanaryStatus", userData.id, accessToken],
+        queryFn: () => getCanaryStatus(userData.id!, accessToken!),
+    });
+
+    useEffect(() => {
+        if (applyStatus.data === 2) {
+            setIsCanary(true);
+        }
+    }, [applyStatus]);
+
+    if (isLoading) return <div></div>;
 
     return (
         <DefaultLayout>
@@ -147,7 +161,11 @@ function MyPage() {
             <UserBasicInfo />
 
             {/* 자립준비청년 인증 */}
-            <CanaryAuth onClick={() => setIsModalOpen(true)} />
+            <CanaryAuth
+                onClick={() => setIsModalOpen(true)}
+                applyStatus={applyStatus.data}
+                isLoading={isLoading}
+            />
 
             {!isCanary && (
                 <SponsorWrapper>

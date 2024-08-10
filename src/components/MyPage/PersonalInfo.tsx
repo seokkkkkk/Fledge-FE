@@ -10,8 +10,11 @@ import GenderSelection from "./PersonalInfo/GenderSelection";
 import Introduction from "./PersonalInfo/Introduction";
 import PostalCode from "./PostalCode";
 import InterestArea from "./PersonalInfo/InterestArea";
+import { postCode } from "./CanaryModal";
+
 const PersonalInfo = () => {
     const { userData, accessToken } = useAuthStore.getState();
+    const [isViewDataLoading, setIsViewDataLoading] = useState(true);
     const [birthData, setBirthData] = useState({
         year: "2000",
         month: "1",
@@ -36,22 +39,27 @@ const PersonalInfo = () => {
         introduction: "",
         address: "",
         detailAddress: "",
-        zip: "",
+        zip: "" as number | string,
         latitude: 0,
         longitude: 0,
         interestArea: null as string | null,
     });
 
+    console.log(data);
+
     useEffect(() => {
-        if (data) {
-            setViewData(data.data);
-            setBirthData({
-                year: data.data.birth.split("-")[0],
-                month: data.data.birth.split("-")[1],
-                day: data.data.birth.split("-")[2],
-            });
+        if (!isLoading) {
+            if (data) {
+                setViewData(data.data);
+                setBirthData({
+                    year: data.data.birth.split("-")[0],
+                    month: data.data.birth.split("-")[1],
+                    day: data.data.birth.split("-")[2],
+                });
+            }
+            setIsViewDataLoading(false);
         }
-    }, [data]);
+    }, [data, isLoading]);
 
     const handleInterestArea = (area: string) => {
         if (viewData.interestArea === null) {
@@ -105,20 +113,17 @@ const PersonalInfo = () => {
         });
     };
 
-    const handleAddressChange = (data: any) => {
+    const handleAddressChange = (data: postCode) => {
         setViewData({
             ...viewData,
             address: data.address,
-            detailAddress: data.detailAddress,
+            detailAddress: data.detailAddress!,
             zip: data.zonecode,
         });
     };
 
-    useEffect(() => {
-        console.log(viewData);
-    }, [viewData]);
-
     if (isLoading) return <div></div>;
+    if (isViewDataLoading) return <div></div>;
 
     return (
         <>
