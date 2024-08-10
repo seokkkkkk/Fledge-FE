@@ -136,7 +136,7 @@ const ItemBox = styled.div`
 `;
 
 const Pagination = styled.div`
-  ${tw`flex mt-32 items-center justify-center mx-auto`}
+  ${tw`flex mt-32 items-center justify-center mx-auto mb-[300px]`}
 `;
 
 const PageNumber = styled.div<{ active: boolean }>`
