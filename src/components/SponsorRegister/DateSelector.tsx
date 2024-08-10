@@ -4,8 +4,8 @@ import tw from "twin.macro";
 import Dropdown from "./Dropdown";
 import { useFormContext } from "react-hook-form";
 
-function DateSelector() {
-  const { setValue, getValues } = useFormContext();
+function DateSelector({ disabled }: { disabled: boolean }) {
+  const { setValue, getValues, watch } = useFormContext();
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
@@ -45,7 +45,7 @@ function DateSelector() {
     let startDay = 1;
     const daysInMonth = new Date(year, month, 0).getDate();
     if (year === currentYear && month === currentMonth) {
-      startDay = currentDay;
+      startDay = currentDay + 1; // Start from the next day
     }
     if (year === maxYear && month === maxMonth) {
       return Array.from({ length: maxDay - startDay + 1 }, (_, i) => ({
@@ -64,20 +64,34 @@ function DateSelector() {
   const [days, setDays] = useState(generateDays(currentYear, currentMonth));
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-  const [selectedMonth, setSelectedMonth] =
-    React.useState<number>(currentMonth);
+  const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth);
   const [selectedDay, setSelectedDay] = useState<number>(currentDay);
 
   useEffect(() => {
+    const endDateStr = watch("endDate");
+    const endDate = endDateStr ? new Date(endDateStr) : new Date();
+    setSelectedYear(endDate.getFullYear());
+    setSelectedMonth(endDate.getMonth() + 1);
+    setSelectedDay(endDate.getDate());
+  }, [watch]);
+
+  useEffect(() => {
     setMonths(generateMonths(selectedYear));
-    setSelectedMonth(
-      currentMonth > selectedMonth ? currentMonth : selectedMonth
-    );
+
+    // if (selectedYear === currentYear && selectedMonth < currentMonth) {
+    //   setSelectedMonth(currentMonth);
+    // }
   }, [selectedYear]);
 
   useEffect(() => {
     setDays(generateDays(selectedYear, selectedMonth));
-    setSelectedDay(currentDay > selectedDay ? currentDay : selectedDay);
+    // if (
+    //   selectedYear === currentYear &&
+    //   selectedMonth === currentMonth &&
+    //   selectedDay < currentDay
+    // ) {
+    //   setSelectedDay(currentDay);
+    // }
   }, [selectedYear, selectedMonth]);
 
   useEffect(() => {
@@ -87,7 +101,7 @@ function DateSelector() {
     )}-${String(selectedDay).padStart(2, "0")}`;
 
     setValue("endDate", selectedDate);
-    console.log(getValues("endDate"));
+    console.log(selectedDate);
   }, [selectedYear, selectedMonth, selectedDay, setValue]);
 
   return (
@@ -96,16 +110,19 @@ function DateSelector() {
         options={years}
         value={selectedYear}
         onChange={(e) => setSelectedYear(Number(e.target.value))}
+        disabled={disabled}
       />
       <Dropdown
         options={months}
         value={selectedMonth}
         onChange={(e) => setSelectedMonth(Number(e.target.value))}
+        disabled={disabled}
       />
       <Dropdown
         options={days}
         value={selectedDay}
         onChange={(e) => setSelectedDay(Number(e.target.value))}
+        disabled={disabled}
       />
     </DateContainer>
   );

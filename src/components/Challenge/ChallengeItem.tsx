@@ -9,6 +9,7 @@ import Heart from "../Common/Heart";
 import Benefit, { BenefitProps } from "./Benefit";
 import { challengeType } from "../../@types/challenge-category";
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ChallengeItemProps {
     title: string;
@@ -19,6 +20,8 @@ interface ChallengeItemProps {
     successRate: number;
     participants: number;
     isCategory?: boolean;
+    challengeId: string;
+    noTag: boolean;
 }
 
 const ChallengeItem = ({
@@ -30,9 +33,12 @@ const ChallengeItem = ({
     successRate,
     participants,
     isCategory,
+    challengeId,
+    noTag,
 }: ChallengeItemProps) => {
+    const navigate = useNavigate();
     let BubbleType = null;
-    if (!isCategory) {
+    if (!isCategory && !noTag) {
         if (bubbleType) {
             BubbleType = bubbleType === "popular" ? BubbleHot : BubbleNew;
         }
@@ -44,7 +50,14 @@ const ChallengeItem = ({
             <Background>
                 <div>
                     <ChallengeHeader>
-                        <Title>{title}</Title>
+                        <Title
+                            onClick={() => {
+                                navigate(`/challenge/${challengeId}`);
+                                window.scrollTo(0, 0);
+                            }}
+                        >
+                            {title}
+                        </Title>
                         <Heart
                             heartCount={heartCount + (isLiked ? 1 : 0)}
                             fill={isLiked}
@@ -249,7 +262,7 @@ const ChallengeParticipants = styled.div`
     ${tw`
         flex
         flex-col
-        gap-[5px]
+        gap-[8px]
     `}
 `;
 
@@ -269,13 +282,15 @@ const Title = styled.span`
         font-bold
         text-fontColor1
         break-keep
+        cursor-pointer
     `}
 `;
 
 const ChallengeType = styled.div`
     ${tw`
+        mt-[4px]
         text-medium-15
-        font-bold
+        font-medium
         text-[white]
         bg-mainColor
         rounded-[28px]

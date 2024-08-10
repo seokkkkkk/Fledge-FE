@@ -5,6 +5,7 @@ interface ButtonProps {
     title: string;
     onClick?: () => void;
     mainColor?: boolean;
+    gray?: boolean;
     small?: boolean;
     background?: string;
     margin?: boolean;
@@ -17,6 +18,7 @@ const Button = ({
     small,
     background = "color",
     margin = true,
+    gray = false,
 }: ButtonProps) => {
     return (
         <ButtonContainer
@@ -26,6 +28,7 @@ const Button = ({
             small={small}
             background={background}
             margin={margin}
+            gray={gray}
         >
             {title}
         </ButtonContainer>
@@ -37,6 +40,8 @@ interface ButtonContainerProps {
     small?: boolean;
     background?: string;
     margin?: boolean;
+    gray?: boolean;
+    onClick?: () => void;
 }
 
 const ButtonContainer = styled.button<ButtonContainerProps>`
@@ -67,6 +72,9 @@ const ButtonContainer = styled.button<ButtonContainerProps>`
         background === "white" && mainColor && tw`text-mainColor`}
 
     ${({ margin }) => margin && tw`mt-auto`}
+    ${({ gray }) => gray && tw`bg-fontColor2 border-fontColor2 text-white`}
+
+    ${({ onClick }) => !onClick && tw`cursor-default`}
 `;
 
 export default Button;

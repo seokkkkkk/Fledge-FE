@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import Button from "../Common/Button";
@@ -13,23 +13,35 @@ interface postCode {
   zonecode: number | string;
   detailAddress?: string;
 }
-function AddressSection() {
-  const { register, setValue } = useFormContext();
+
+// prop 타입 정의
+interface AddressSectionProps {
+  serverData?: postCode;
+}
+
+function AddressSection({ serverData }: AddressSectionProps) {
+  const { register, setValue, watch } = useFormContext();
   const accesstoken = useAuthStore((state) => state.accessToken);
   const [addressData, setAddressData] = useState({
-    address: "",
-    detailAddress: "",
-    zonecode: "",
+    address: serverData ? serverData.address : "",
+    detailAddress: serverData ? serverData.detailAddress : "",
+    zonecode: serverData ? serverData.zonecode : "",
   });
+
+  // console.log(addressData);
+
+  //마이페이지 정보 불러오기
   const getAddressData = async () => {
     const res = await getAddress(accesstoken!);
-    if (res && res.success) {
+    if (res.success) {
+      console.log(res.data);
       const { address, detailAddress, zip, name, phone } = res.data;
-      setValue("address", address);
-      setValue("detailAddress", detailAddress);
-      setValue("zip", zip);
-      setValue("recipientName", name);
-      setValue("phone", phone);
+      console.log(address, detailAddress, zip, name, phone);
+      setValue("address", address, { shouldValidate: true });
+      setValue("detailAddress", detailAddress, { shouldValidate: true });
+      setValue("zip", zip, { shouldValidate: true });
+      setValue("recipientName", name, { shouldValidate: true });
+      setValue("phone", phone, { shouldValidate: true });
       setAddressData({ address, detailAddress, zonecode: zip });
     }
   };

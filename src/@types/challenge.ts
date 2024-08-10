@@ -8,11 +8,12 @@ export type ChallengerProps = {
 
 export type BestChallengerProps = {
     memberId: number;
-    memberName: string;
-    participationCount: number;
+    nickname: string;
+    totalCount: number;
     successCount: number;
     successRate: number;
     topCategories: string[];
+    profileImageUrl: string;
 };
 
 export type ChallengeProps = {
@@ -54,4 +55,19 @@ export type ChallengeProps = {
     first: boolean;
     last: boolean;
     empty: boolean;
+};
+
+export type ChallengeDetailProps = {
+    categrories: string[];
+    despription: string;
+    endDate: string | null;
+    likeCount: number;
+    participantCount: number;
+    participating: boolean;
+    startDate: string | null;
+    successCount: number;
+    successRate: number;
+    supportContent: string | null;
+    title: string;
+    type: string;
 };

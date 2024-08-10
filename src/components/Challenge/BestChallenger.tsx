@@ -4,20 +4,9 @@ import ContentHeader from "../Common/ContentHeader";
 import Challenger from "./Challenger";
 import { getTopParticipants } from "../../apis/challenge";
 import { useQuery } from "@tanstack/react-query";
-import useAuthStore from "../../storage/useAuthStore";
-import defaultProfile from "../../assets/images/profile-big.png";
 import { BestChallengerProps } from "../../@types/challenge";
 
-type ChallengerProps = {
-    memberId: number;
-    memberName: string;
-    participationCount: number;
-    successCount: number;
-    successRate: number;
-    topCategories: string[];
-};
-
-const scroll = keyframes`
+export const scroll = keyframes`
     from {
         transform: translateX(100%);
     }
@@ -27,7 +16,6 @@ const scroll = keyframes`
 `;
 
 const BestChallenger = () => {
-    const { accessToken } = useAuthStore();
     const { data: topChallengersData, isLoading } = useQuery({
         queryKey: ["getTopParticipants"],
         queryFn: () => getTopParticipants(),
@@ -46,12 +34,12 @@ const BestChallenger = () => {
                     (challenger: BestChallengerProps, index: number) => (
                         <Challenger
                             key={index}
-                            imgSrc={defaultProfile}
-                            name={challenger.memberName}
+                            imgSrc={challenger.profileImageUrl}
+                            name={challenger.nickname}
                             desc={
                                 challenger.successCount +
                                 "/" +
-                                challenger.participationCount +
+                                challenger.totalCount +
                                 "개 챌린지 성공!"
                             }
                             categoryList={challenger.topCategories}
@@ -78,14 +66,5 @@ const Container = styled.div`
         display: flex;
         white-space: nowrap;
         overflow: hidden;
-    }
-
-    .profile {
-        ${tw`
-            flex
-            flex-col
-            items-center
-            gap-[7px]
-        `}
     }
 `;

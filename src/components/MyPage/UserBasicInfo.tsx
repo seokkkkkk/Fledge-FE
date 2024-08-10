@@ -33,6 +33,7 @@ const UserBasicInfo = () => {
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        readOnly
                     />
                 </div>
                 <div className="input">
@@ -41,7 +42,7 @@ const UserBasicInfo = () => {
                         className="input-text"
                         type="text"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        readOnly
                     />
                 </div>
                 <DropDown
@@ -55,6 +56,7 @@ const UserBasicInfo = () => {
                             )?.value
                         )
                     }
+                    readOnly
                 />
             </InfoInput>
         </Container>

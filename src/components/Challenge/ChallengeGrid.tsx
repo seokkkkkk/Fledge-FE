@@ -13,6 +13,7 @@ type ChallengeGridProps = {
     categories?: string[];
     size?: number;
     onePage?: boolean;
+    noTag: boolean;
 };
 
 const ChallengeGrid = ({
@@ -20,6 +21,7 @@ const ChallengeGrid = ({
     categories,
     size,
     onePage = false,
+    noTag,
 }: ChallengeGridProps) => {
     const [page, setPage] = useState<number>(0);
     const isCategory = categories !== undefined;
@@ -48,7 +50,7 @@ const ChallengeGrid = ({
                     <LeftArrowIcon width={24} height={51} />
                 </button>
             )}
-            <ChallengeSlider>
+            <ChallengeSlider size={size}>
                 {challengeData.data.content.map(
                     (challenge: any, index: number) => (
                         <ChallengeItem
@@ -61,6 +63,8 @@ const ChallengeGrid = ({
                             successRate={challenge.successRate}
                             participants={challenge.participantCount}
                             isCategory={isCategory}
+                            challengeId={challenge.id}
+                            noTag={noTag}
                         />
                     )
                 )}
@@ -89,8 +93,19 @@ const ChallengerContainer = styled.div`
     `}
 `;
 
-const ChallengeSlider = styled.div`
+type ChallengeItemProps = {
+    size?: number;
+};
+
+const ChallengeSlider = styled.div<ChallengeItemProps>`
     ${tw`
-    grid grid-cols-4 grid-rows-2 gap-[23px]
+    grid grid-cols-4 gap-[23px]
 `}
+    //size가 4 이상일 때
+    ${({ size }) =>
+        size &&
+        size > 4 &&
+        tw`
+        grid-rows-2
+    `}
 `;

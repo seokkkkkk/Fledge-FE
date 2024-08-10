@@ -32,10 +32,11 @@ const Challenge = () => {
                 desc="지금 가장 HOT한 챌린지들을 만나보세요!"
                 imgSrc={hot}
                 type="popular"
+                mb="-12px"
             />
 
             {/* 연계 챌린지 */}
-            <ChainChallenge />
+            <ChainChallenge mb="-44px" ml="40px" />
 
             {/* 신규 챌린지 */}
             <ChallengeList
@@ -43,6 +44,8 @@ const Challenge = () => {
                 desc="새로 갱신된 흥미로운 챌린지들을 만나보세요!"
                 imgSrc={newImg}
                 type="new"
+                ml="30px"
+                mb="10px"
             />
 
             {/* 카테고리별 모아보기 */}

@@ -192,7 +192,14 @@ const CanaryModal = ({ onClick }: { onClick: () => void }) => {
                                 />
                             </div>
                         </div>
-                        <PostalCode onChange={handleAddressChange} />
+                        <PostalCode
+                            initialAddress={{
+                                address: applyData.address,
+                                detailAddress: applyData.detailAddress,
+                                zonecode: applyData.zip,
+                            }}
+                            onChange={handleAddressChange}
+                        />
                     </div>
                     <div>
                         <Button title="제출하기" small onClick={onSubmit} />

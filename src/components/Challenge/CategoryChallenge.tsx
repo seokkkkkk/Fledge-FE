@@ -44,7 +44,11 @@ const CategoryChallenge = () => {
                 ))}
             </Keywords>
             <CategoryContainer>
-                <ChallengeGrid type="new" categories={selectedCategories} />
+                <ChallengeGrid
+                    type="new"
+                    categories={selectedCategories}
+                    noTag={true}
+                />
             </CategoryContainer>
         </Container>
     );

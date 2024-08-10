@@ -57,7 +57,8 @@ const Container = styled.div`
         .category {
             ${tw`
                     px-[7px] bg-mainColor rounded-[28px]
-                    text-white text-medium-12 font-medium
+                    text-white text-medium-15 font-medium
+                    pb-[2px]
                 `}
         }
     }
@@ -75,5 +76,13 @@ const Container = styled.div`
                     text-medium-15 font-medium text-fontColor3
                 `}
         }
+    }
+    .profile {
+        ${tw`
+            flex
+            flex-col
+            items-center
+            gap-[7px]
+        `}
     }
 `;

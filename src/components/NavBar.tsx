@@ -18,42 +18,63 @@ const NavBar = () => {
     };
 
     return (
-        <Container>
-            <MenuContainer>
-                <Logo onClick={() => navigate("/")} />
-                <MenuItem onClick={() => navigate("/sponsor")}>
-                    후원하기
-                </MenuItem>
-                <MenuItem onClick={() => navigate("/challenge")}>
-                    챌린지
-                </MenuItem>
-                <MenuItem onClick={() => navigate("/mentor-intro")}>
-                    멘토링
-                </MenuItem>
-                <MenuItem>정보공유</MenuItem>
-                <MenuItem>소개</MenuItem>
-            </MenuContainer>
-            {isLoggedIn ? (
-                <User
-                    nickname={userData.nickname ?? ""}
-                    profile={userData.profile}
-                />
-            ) : (
-                <LoginButton handleSign={handleSign} />
-            )}
-        </Container>
+        <>
+            <Container>
+                <div className="menus">
+                    <MenuContainer>
+                        <Logo onClick={() => navigate("/")} />
+                        <MenuItem onClick={() => navigate("/sponsor")}>
+                            후원하기
+                        </MenuItem>
+                        <MenuItem onClick={() => navigate("/challenge")}>
+                            챌린지
+                        </MenuItem>
+                        <MenuItem onClick={() => navigate("/mentor-intro")}>
+                            멘토링
+                        </MenuItem>
+                        <MenuItem>정보공유</MenuItem>
+                        <MenuItem>소개</MenuItem>
+                    </MenuContainer>
+                    {isLoggedIn ? (
+                        <User
+                            nickname={userData.nickname ?? ""}
+                            profile={userData.profile ?? Profile}
+                        />
+                    ) : (
+                        <LoginButton handleSign={handleSign} />
+                    )}
+                </div>
+            </Container>
+            <Spacer />
+        </>
     );
 };
 
 export default NavBar;
 
-const Container = styled.div`
+const Spacer = styled.div`
     ${tw`
-        flex
-        justify-between
-        w-[1280px]
+        w-full
         h-[85px]
     `}
+`;
+
+const Container = styled.div`
+    ${tw`
+        fixed
+        z-50
+        w-full
+        h-[85px]
+        bg-[#FAF8F5]/30
+        flex justify-center
+    `}
+    backdrop-filter: blur(18.4px); /* Adjust the blur value as needed */
+
+    .menus {
+        ${tw`
+            flex justify-between w-[1280px]
+        `}
+    }
 `;
 
 const MenuContainer = styled.div`

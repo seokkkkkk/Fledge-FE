@@ -35,7 +35,7 @@ function AccountForm({
 
 export default AccountForm;
 const Container = styled.div`
-  ${tw`flex flex-row items-center w-[610px] justify-between mt-6`}
+  ${tw`flex flex-row items-center w-[610px] justify-between mt-5`}
   label {
     ${tw`font-medium text-medium-20 text-fontColor3 my-3.5`}
   }

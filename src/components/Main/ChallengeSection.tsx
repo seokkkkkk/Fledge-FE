@@ -2,9 +2,6 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import Medal from "../../assets/images/medal.png";
 import ContentHeader from "../Common/ContentHeader";
-import { ChallengeItem, ChallengeItemLarge } from "../Challenge/ChallengeItem";
-import Partner1 from "../../assets/images/partner1.png";
-import Partner2 from "../../assets/images/partner2.png";
 import { useNavigate } from "react-router-dom";
 import ChallengeGrid from "../Challenge/ChallengeGrid";
 import ChainChallengeList from "../Challenge/ChainChallengeList";
@@ -22,7 +19,12 @@ const ChallengeSection = () => {
                 }}
             />
             <ChallengeList>
-                <ChallengeGrid type="new" size={4} onePage={true} />
+                <ChallengeGrid
+                    type="new"
+                    size={4}
+                    onePage={true}
+                    noTag={false}
+                />
                 <div className="position-control">
                     <ChainChallengeList onePage={true} />
                 </div>
@@ -41,7 +43,7 @@ const ChallengeList = styled.div`
     `}
     .position-control {
         ${tw`
-        mt-[-80px]
+            mt-[220px]
      `}
     }
 `;

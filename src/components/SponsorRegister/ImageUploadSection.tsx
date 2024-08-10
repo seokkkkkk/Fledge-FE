@@ -1,31 +1,67 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import tw from "twin.macro";
 import AddIcon from "../../assets/icons/add-icon";
 import DeleteIcon from "../../assets/icons/delete-icon";
 
-const ImageUploadSection = () => {
-  const { setValue, getValues } = useFormContext();
-  const [images, setImages] = useState<File[]>([]);
+type ImgProps = {
+  presignedUrl: string;
+  originalUrl: string;
+};
+const ImageUploadSection = ({
+  status,
+  serverImg,
+}: {
+  status?: string;
+  serverImg?: ImgProps[];
+}) => {
+  const { setValue, getValues, watch } = useFormContext();
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // 새로 추가된 파일들
+  const [imageUrls, setImageUrls] = useState<string[]>([]); // 기존의 이미지 URL들
+
+  useEffect(() => {
+    if (serverImg && serverImg.length > 0) {
+      // presignedUrl을 imageUrls에 세팅
+      const urls = serverImg.map((img) => img.presignedUrl);
+      setImageUrls(urls);
+
+      // 서버에서 제공된 이미지 URL만 따로 관리
+      setValue("images", []);
+    }
+  }, [serverImg]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
-      setImages((prevImages) => {
-        const newImages = [...prevImages, ...filesArray];
-        setValue("images", newImages);
-        return newImages;
+      setImageFiles((prevFiles) => {
+        const newFiles = [...prevFiles, ...filesArray];
+        setValue("images", [...watch("images"), ...newFiles]); // 이미지 배열에 새로 추가된 파일들 저장
+        return newFiles;
       });
     }
   };
 
   const handleImageDelete = (index: number) => {
-    setImages((prevImages) => {
-      const updatedImages = prevImages.filter((_, i) => i !== index);
-      setValue("images", updatedImages);
-      return updatedImages;
-    });
+    if (index < imageUrls.length) {
+      // URL 삭제
+      const updatedUrls = imageUrls.filter((_, i) => i !== index);
+      setImageUrls(updatedUrls);
+      setValue(
+        "images",
+        watch("images").filter((_: any, i: number) => i !== index)
+      ); // 해당 인덱스의 파일도 삭제
+    } else {
+      // File 객체 삭제
+      const updatedFiles = imageFiles.filter(
+        (_, i) => i !== index - imageUrls.length
+      );
+      setImageFiles(updatedFiles);
+      setValue(
+        "images",
+        watch("images").filter((_: any, i: number) => i !== index)
+      ); // 파일 삭제 후 setValue로 반영
+    }
   };
   return (
     <Container>
@@ -33,7 +69,7 @@ const ImageUploadSection = () => {
         <label>이미지 첨부</label>
         <span className="desc">이미지는 최대 4장 첨부할 수 있어요.</span>
       </div>
-      {images.length === 0 && (
+      {imageUrls.length + imageFiles.length === 0 && (
         <UploadButtonWrapper>
           <label htmlFor="image-upload">이미지 업로드하기</label>
           <input
@@ -43,14 +79,15 @@ const ImageUploadSection = () => {
             accept="image/*"
             multiple
             onChange={handleImageUpload}
+            disabled={Boolean(status && status !== "PENDING")}
           />
         </UploadButtonWrapper>
       )}
       <ImageContainer>
-        {images.map((image, index) => (
+        {imageUrls.map((url, index) => (
           <ImageWrapper key={index}>
             <img
-              src={URL.createObjectURL(image)}
+              src={url}
               alt={`Uploaded ${index}`}
               className="uploaded-image"
             />
@@ -59,21 +96,36 @@ const ImageUploadSection = () => {
             </DeleteIconWrapper>
           </ImageWrapper>
         ))}
-        {/* 이미지 업로드 영역 */}{" "}
-        {images.length > 0 && images.length < 4 && (
-          <AddButton as="label" htmlFor="image-upload">
-            <AddIcon width={65} height={65} />
-            <label>이미지 추가 업로드</label>
-            <input
-              type="file"
-              id="image-upload"
-              style={{ display: "none" }}
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
+        {imageFiles.map((file, index) => (
+          <ImageWrapper key={index + imageUrls.length}>
+            <img
+              src={URL.createObjectURL(file)}
+              alt={`Uploaded ${index + imageUrls.length}`}
+              className="uploaded-image"
             />
-          </AddButton>
-        )}
+            <DeleteIconWrapper
+              onClick={() => handleImageDelete(index + imageUrls.length)}
+            >
+              <DeleteIcon />
+            </DeleteIconWrapper>
+          </ImageWrapper>
+        ))}
+        {imageUrls.length + imageFiles.length > 0 &&
+          imageUrls.length + imageFiles.length < 4 && (
+            <AddButton as="label" htmlFor="image-upload">
+              <AddIcon width={65} height={65} />
+              <label>이미지 추가 업로드</label>
+              <input
+                type="file"
+                id="image-upload"
+                style={{ display: "none" }}
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                disabled={Boolean(status && status !== "PENDING")}
+              />
+            </AddButton>
+          )}
       </ImageContainer>
     </Container>
   );

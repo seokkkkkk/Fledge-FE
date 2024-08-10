@@ -7,6 +7,7 @@ import AccountForm from "./AccountForm";
 
 function AccountSection() {
   const { setValue, watch } = useFormContext();
+
   return (
     <>
       <Title>계좌번호 입력</Title>
@@ -20,8 +21,12 @@ function AccountSection() {
         <AccountForm
           bankValue={watch("bank")}
           accountValue={watch("account")}
-          onBankChange={(value) => setValue("bank", value)}
-          onAccountChange={(value) => setValue("account", value)}
+          onBankChange={(value) =>
+            setValue("bank", value, { shouldValidate: true })
+          }
+          onAccountChange={(value) =>
+            setValue("account", value, { shouldValidate: true })
+          }
         />
       </Container>
     </>

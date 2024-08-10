@@ -3,6 +3,8 @@ import tw from "twin.macro";
 import DropDown from "../../Common/DropDown";
 import Button from "../../Common/Button";
 import Location from "../Location";
+import { useEffect, useState } from "react";
+import { hangjungdong } from "../../../@types/hangjungdong";
 
 interface InterestAreaProps {
     area: { sido: string; sigungu: string; dong: string };
@@ -18,45 +20,96 @@ const InterestArea = ({
     onAreaChange,
     onSave,
     onDeleteInterestArea,
-}: InterestAreaProps) => (
-    <FourthContainer>
-        <div className="header">
-            <span className="sub-text">관심 지역</span>
-            <span className="desc-text">
-                최대 10개의 지역을 고를 수 있어요.
-            </span>
-        </div>
-        <div className="selection">
-            <div className="selection-item">
-                <DropDown
-                    items={["시/도", "경기", "인천"]}
-                    value={area.sido}
-                    onChange={(e) => onAreaChange("sido", e.target.value)}
-                    width="110px"
-                />
-                <DropDown
-                    items={["시/군/구", "강동구"]}
-                    value={area.sigungu}
-                    onChange={(e) => onAreaChange("sigungu", e.target.value)}
-                />
-                <DropDown
-                    items={["행정구/시", "청담동"]}
-                    value={area.dong}
-                    onChange={(e) => onAreaChange("dong", e.target.value)}
-                />
-                <Button title="저장" mainColor onClick={onSave} />
+}: InterestAreaProps) => {
+    const [sidoList, setSidoList] = useState<string[]>([]);
+    const [sigunguList, setSigunguList] = useState<string[]>([]);
+    const [dongList, setDongList] = useState<string[]>([]);
+
+    useEffect(() => {
+        // 시/도 리스트 초기화
+        const sidoNames = hangjungdong.sido.map((sido) => sido.codeNm);
+        setSidoList(["시/도", ...sidoNames]);
+    }, []);
+
+    useEffect(() => {
+        // 시/군/구 리스트 업데이트
+        if (area.sido !== "시/도") {
+            const selectedSido = hangjungdong.sido.find(
+                (sido) => sido.codeNm === area.sido
+            )?.sido;
+            const sigunguNames = hangjungdong.sigugun
+                .filter((sg) => sg.sido === selectedSido)
+                .map((sg) => sg.codeNm);
+            setSigunguList(["시/군/구", ...sigunguNames]);
+        } else {
+            setSigunguList(["시/군/구"]);
+        }
+    }, [area.sido]);
+
+    useEffect(() => {
+        // 행정구/시 리스트 업데이트
+        if (area.sigungu !== "시/군/구") {
+            const selectedSigungu = hangjungdong.sigugun.find(
+                (sg) => sg.codeNm === area.sigungu
+            )?.sigugun;
+            const dongNames = hangjungdong.dong
+                .filter((d) => d.sigugun === selectedSigungu)
+                .map((d) => d.codeNm);
+            setDongList(["행정구/시", ...dongNames]);
+        } else {
+            setDongList(["행정구/시"]);
+        }
+    }, [area.sigungu]);
+
+    useEffect(() => {
+        onAreaChange("sigungu", "시/군/구");
+    }, [area.sido]);
+
+    useEffect(() => {
+        onAreaChange("dong", "행정구/시");
+    }, [area.sigungu]);
+
+    return (
+        <FourthContainer>
+            <div className="header">
+                <span className="sub-text">관심 지역</span>
+                <span className="desc-text">
+                    최대 10개의 지역을 고를 수 있어요.
+                </span>
             </div>
-            <div className="selected-list">
-                {interestArea && (
-                    <Location
-                        text={interestArea}
-                        onClick={onDeleteInterestArea}
+            <div className="selection">
+                <div className="selection-item">
+                    <DropDown
+                        items={sidoList}
+                        value={area.sido}
+                        onChange={(e) => onAreaChange("sido", e.target.value)}
                     />
-                )}
+                    <DropDown
+                        items={sigunguList}
+                        value={area.sigungu}
+                        onChange={(e) =>
+                            onAreaChange("sigungu", e.target.value)
+                        }
+                    />
+                    <DropDown
+                        items={dongList}
+                        value={area.dong}
+                        onChange={(e) => onAreaChange("dong", e.target.value)}
+                    />
+                    <Button title="저장" mainColor onClick={onSave} />
+                </div>
+                <div className="selected-list">
+                    {interestArea && (
+                        <Location
+                            text={interestArea}
+                            onClick={onDeleteInterestArea}
+                        />
+                    )}
+                </div>
             </div>
-        </div>
-    </FourthContainer>
-);
+        </FourthContainer>
+    );
+};
 
 export default InterestArea;
 

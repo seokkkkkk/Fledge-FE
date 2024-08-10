@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import tw from "twin.macro";
 import arrow from "../../assets/images/under-arrow-small.png";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface InputProps {
     hint?: string;
@@ -10,6 +10,7 @@ interface InputProps {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     width?: string;
     type?: string;
+    readOnly?: boolean;
 }
 
 const DropDown = ({
@@ -19,8 +20,26 @@ const DropDown = ({
     width,
     type,
     onChange,
+    readOnly = false,
 }: InputProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target as Node)
+        ) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const typeHandler = (type: string) => {
         switch (type) {
@@ -40,14 +59,15 @@ const DropDown = ({
     if (!typeItems) return null;
 
     return (
-        <Container style={{ width: width }}>
+        <Container style={{ width: width }} ref={dropdownRef}>
             <div style={{ visibility: hint ? "visible" : "hidden" }}>
                 {hint || "Placeholder"}
             </div>
             <div>
                 <DropdownButton
                     style={{ width: width }}
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() => !readOnly && setIsOpen(!isOpen)}
+                    readOnly={readOnly}
                 >
                     <span>{value ? value : typeItems[0]}</span>
                     <img
@@ -56,7 +76,7 @@ const DropDown = ({
                         className={`${isOpen && ` rotate-180`}`}
                     />
                 </DropdownButton>
-                {isOpen && (
+                {isOpen && !readOnly && (
                     <DropdownList style={{ width: width }}>
                         {typeItems.map((item, index) => (
                             <DropdownItem
@@ -89,11 +109,14 @@ const Container = styled.div`
         relative
     `}
 `;
-const DropdownButton = styled.div`
+const DropdownButton = styled.div<{ readOnly: boolean }>`
     ${tw`
         flex items-center justify-between
          gap-[4px] h-[46px] bg-white px-[19px] rounded-full text-medium-20 font-medium text-fontColor1 cursor-pointer
     `}
+    cursor: ${({ readOnly }) =>
+        readOnly ? "default" : "pointer"}; // 커서 설정
+
     span {
         white-space: nowrap;
         overflow: hidden;

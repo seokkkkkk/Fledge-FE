@@ -5,7 +5,7 @@ import tw from "twin.macro";
 import Dropdown from "./Dropdown";
 import { categories } from "../../@types/sponsor-category";
 
-const ContentSection = () => {
+const ContentSection = ({ status }: { status?: string }) => {
   const {
     register,
     setValue,
@@ -13,30 +13,28 @@ const ContentSection = () => {
     watch,
     formState: { errors },
   } = useFormContext();
-  const selectedCategory = watch("category");
 
-  useEffect(() => {
-    if (
-      selectedCategory === "EDUCATION" ||
-      selectedCategory === "MEDICAL" ||
-      selectedCategory === "LEGAL_AID"
-    ) {
-      setValue("itemUrl", "판매사이트 없음");
-    }
-  }, [selectedCategory, setValue]);
   console.log(getValues("category"));
   return (
     <>
       <Title>후원 게시물 본문</Title>
       <InputBox className="w-3/4">
         <label>*후원 게시물 제목</label>
-        <input type="text" {...register("title", { required: true })} />
+        <input
+          type="text"
+          {...register("title", { required: true })}
+          disabled={Boolean(status && status !== "PENDING")}
+        />
       </InputBox>
 
       <div className="flex flex-row items-center w-full">
         <InputBox className="w-1/3">
           <label>*후원 물품 이름</label>
-          <input type="text" {...register("item", { required: true })} />
+          <input
+            type="text"
+            {...register("item", { required: true })}
+            disabled={Boolean(status && status !== "PENDING")}
+          />
         </InputBox>
         <InputBox className="w-1/3">
           <label>*후원 물품 금액</label>
@@ -47,6 +45,7 @@ const ContentSection = () => {
               validate: (value) =>
                 parseFloat(value) > 0 || "금액은 0원보다 커야 합니다.",
             })}
+            disabled={Boolean(status && status !== "PENDING")}
           />
           {errors.price && (
             <span className="absolute mt-24 ml-2 text-[red]">
@@ -62,12 +61,23 @@ const ContentSection = () => {
             onChange={(e) =>
               setValue("category", e.target.value, { shouldValidate: true })
             }
+            disabled={Boolean(status && status !== "PENDING")}
           />
         </InputBox>
       </div>
       <InputBox className="w-1/3">
-        <label>*후원 물품 판매사이트</label>
-        <input type="text" {...register("itemUrl", { required: true })} />
+        <label>후원 물품 판매사이트</label>
+        <input
+          type="text"
+          {...register("itemUrl", {
+            required: !(
+              watch("category") === "EDUCATION" ||
+              watch("category") === "MEDICAL" ||
+              watch("category") === "LEGAL_AID"
+            ),
+          })}
+          disabled={Boolean(status && status !== "PENDING")}
+        />
       </InputBox>
     </>
   );

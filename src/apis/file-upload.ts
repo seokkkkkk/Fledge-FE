@@ -8,7 +8,7 @@ export const getPresignedUrl = async (
 ) => {
   try {
     const res = await axios.get(
-      `/api/v1/files/presigned-url?prefix=${prefix}&fileName=${fileName}`,
+      `/api/v1/files/presigned-url?prefix=images/${prefix}&fileName=${fileName}`,
       {
         headers: {
           Authorization: `Bearer ${accesstoken}`,

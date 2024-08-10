@@ -11,6 +11,7 @@ type SponsorListProps = {
 function SponsorList({ supporters, nickname }: SponsorListProps) {
   //호버 된 아이템 인덱스를 담을 state
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  console.log(supporters);
   return (
     <Container>
       <span className="title">후원자 명단</span>
@@ -24,14 +25,16 @@ function SponsorList({ supporters, nickname }: SponsorListProps) {
               onMouseLeave={() => setHoverIndex(null)}
             >
               <NameBox>
-                <label className="name">{supporter.key}</label>
+                <label className="name">{Object.keys(supporter)}</label>
               </NameBox>
               {hoverIndex === index && (
                 <HoverContainer>
                   <div className="flex flex-col items-center">
                     <HoverBox>
                       <span className="medium-12">후원 금액</span>
-                      <span className="bold-20">{supporter.value}원</span>
+                      <span className="bold-20">
+                        {Object.values(supporter)}원
+                      </span>
                     </HoverBox>
                     <Polygon width={36} height={36} color="#FFFFFF" />
                   </div>

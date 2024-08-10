@@ -6,12 +6,18 @@ type DropdownProps = {
   options: Array<{ id: string | number; label: string | number }>;
   value: string | number;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  disabled?: boolean;
 };
 
-const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  options,
+  value,
+  onChange,
+  disabled,
+}) => {
   return (
     <SelectWrapper>
-      <Select value={value} onChange={onChange}>
+      <Select value={value} onChange={onChange} disabled={disabled}>
         {options.map((option) => (
           <option key={option.id} value={option.id}>
             {option.label}

@@ -37,10 +37,17 @@ function AllPostSection() {
   });
 
   const handleUserPermission = () => {
-    if (userData.role === "USER") {
-      alert("자립준비청년만 이용 가능한 기능입니다.");
+    if (Object.keys(userData).length !== 0) {
+      if (userData.role === "USER") {
+        alert("자립준비청년만 이용 가능한 기능입니다.");
+      } else {
+        navigate("/sponsor-register", {
+          state: { mode: "create" },
+        });
+        window.scrollTo(0, 0);
+      }
     } else {
-      navigate("/sponsor-register");
+      alert("로그인 후 이용 가능한 기능입니다.");
     }
   };
   console.log(PostData);
@@ -149,7 +156,7 @@ const ArrowButton = styled.button`
   }
 `;
 const NoPostWrapper = styled.div`
-  ${tw`w-[1280px] h-[415px] my-5 [border-radius: 16px] flex flex-col items-center justify-center bg-white`}
+  ${tw`w-[960px] h-[415px] my-5 [border-radius: 16px] flex flex-col items-center justify-center bg-white`}
   span {
     ${tw`font-sans font-medium text-medium-20 text-fontColor2`}
   }

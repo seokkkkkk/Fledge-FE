@@ -7,7 +7,7 @@ type ContentDetailProps = {
   data: SponsorDetailData;
 };
 
-const ContentDetail: React.FC<ContentDetailProps> = ({ data }) => {
+function ContentDetail({ data }: ContentDetailProps) {
   return (
     <Container>
       <RowBox className="justify-between items-center">
@@ -33,11 +33,11 @@ const ContentDetail: React.FC<ContentDetailProps> = ({ data }) => {
 
       <RowBox>
         <ColBox className="w-1/2">
-          <RowBox className="my-2">
+          <RowBox className="my-2 w-full">
             <label className="medium-20">필요 물품</label>
             <span className="content">{data.item}</span>
           </RowBox>
-          <RowBox className="my-2">
+          <RowBox className="my-2 w-full">
             <label className="medium-20">구매 링크</label>
             <span className="content">{data.purchaseUrl}</span>
           </RowBox>
@@ -46,14 +46,14 @@ const ContentDetail: React.FC<ContentDetailProps> = ({ data }) => {
             <span className="content">{data.price}</span>
           </RowBox>
         </ColBox>
-        <RowBox>
+        <RowBox className="w-1/2 h-full">
           <label className="medium-20">세부 내용</label>
           <span className="content">{data.reason}</span>
         </RowBox>
       </RowBox>
     </Container>
   );
-};
+}
 
 export default ContentDetail;
 
@@ -64,13 +64,15 @@ const Container = styled.div`
     ${tw`font-bold text-bold-64 text-subColor`}
   }
   .medium-20 {
-    ${tw`font-medium text-fontColor3 text-medium-20`}
+    ${tw`font-medium text-fontColor3 text-medium-20 w-[79px]`}
   }
   .title {
     ${tw`font-bold text-bold-48 text-fontColor1`}
   }
   .content {
-    ${tw`ml-7 font-bold text-bold-20 text-fontColor1`}
+    ${tw`ml-7 font-bold text-bold-20 text-fontColor1 w-[354px] `}// white-space: nowrap; // Prevents the text from wrapping to a new line
+    // overflow: hidden; // Hides any overflow text
+    // text-overflow: ellipsis; // Adds an ellipsis (...) if the text overflows
   }
 `;
 

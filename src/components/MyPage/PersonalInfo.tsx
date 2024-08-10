@@ -105,6 +105,21 @@ const PersonalInfo = () => {
         });
     };
 
+    const handleAddressChange = (data: any) => {
+        setViewData({
+            ...viewData,
+            address: data.address,
+            detailAddress: data.detailAddress,
+            zip: data.zonecode,
+        });
+    };
+
+    useEffect(() => {
+        console.log(viewData);
+    }, [viewData]);
+
+    if (isLoading) return <div></div>;
+
     return (
         <>
             {/* 회원 개인 정보 헤더 */}
@@ -131,7 +146,14 @@ const PersonalInfo = () => {
                         handleViewData("introduction", introduction)
                     }
                 />
-                <PostalCode />
+                <PostalCode
+                    initialAddress={{
+                        address: viewData.address,
+                        detailAddress: viewData.detailAddress,
+                        zonecode: viewData.zip,
+                    }}
+                    onChange={handleAddressChange}
+                />
                 <InterestArea
                     area={area}
                     interestArea={viewData.interestArea}

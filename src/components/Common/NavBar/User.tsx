@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import tw from "twin.macro";
+import useAuthStore from "../../../storage/useAuthStore";
+import { useNavigate } from "react-router-dom";
+import { postLogout } from "../../../apis/user";
 import { useState } from "react";
 import ProfileMenu from "./ProfileMenu";
 
@@ -10,6 +13,15 @@ interface UserContainerProps {
 
 const User = ({ nickname, profile }: UserContainerProps) => {
     const [isProfileHovered, setIsProfileHovered] = useState(false);
+    const navigate = useNavigate();
+    const accessToken = useAuthStore((state) => state.accessToken);
+    const onLogout = async () => {
+        const res = await postLogout(accessToken!);
+        if (res.success) {
+            useAuthStore.getState().logout();
+            navigate("/");
+        }
+    };
 
     return (
         <Container>
@@ -23,7 +35,7 @@ const User = ({ nickname, profile }: UserContainerProps) => {
                 onMouseLeave={() => setIsProfileHovered(false)}
             >
                 <Profile src={profile} alt="profile" />
-                {isProfileHovered && <ProfileMenu />}
+                {isProfileHovered && <ProfileMenu onLogout={onLogout} />}
             </div>
         </Container>
     );

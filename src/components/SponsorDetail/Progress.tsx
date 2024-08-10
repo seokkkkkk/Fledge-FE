@@ -8,49 +8,46 @@ import { useParams } from "react-router-dom";
 
 interface progressProps {
   modal?: boolean;
+  progress: number;
+  supportedPrice: number;
+  totalPrice: number;
 }
-function Progress({ modal }: progressProps) {
-  const { supportId } = useParams() as { supportId: string };
+function Progress({
+  modal,
+  progress,
+  supportedPrice,
+  totalPrice,
+}: progressProps) {
+  return (
+    <Container>
+      <div className="relative">
+        {!modal && (
+          <TagBox progress={progress}>
+            <div className="upper">
+              {supportedPrice !== 0 ? (
+                <span>{supportedPrice}원 달성!</span>
+              ) : (
+                <span>첫 후원자가 되어 주세요!</span>
+              )}
+            </div>
+            <Polygon color={"#EE5D5D"} />
+          </TagBox>
+        )}
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["getSponsorProgress"],
-    queryFn: () => getProgressInfo(supportId),
-  });
-
-  if (!isLoading && data) {
-    return (
-      <Container>
-        <div className="relative">
-          {!modal && (
-            <TagBox progress={data.progress}>
-              <div className="upper">
-                {data.supportedPrice !== 0 ? (
-                  <span>{data.supportedPrice}원 달성!</span>
-                ) : (
-                  <span>첫 후원자가 되어 주세요!</span>
-                )}
-              </div>
-              <Polygon color={"#EE5D5D"} />
-            </TagBox>
-          )}
-
-          <ProgressBar progress={data.progress} modal={modal}></ProgressBar>
-        </div>
-        <RowBox>
-          <span className="medium-20">진행률 {data.progress}%</span>
-          <span className="medium-20">₩ {data.totalPrice}</span>
-        </RowBox>
-      </Container>
-    );
-  } else {
-    return <div></div>;
-  }
+        <ProgressBar progress={progress} modal={modal}></ProgressBar>
+      </div>
+      <RowBox>
+        <span className="medium-20">진행률 {progress}%</span>
+        <span className="medium-20">₩ {totalPrice}</span>
+      </RowBox>
+    </Container>
+  );
 }
 
 export default Progress;
 
 const Container = styled.div`
-  ${tw`w-full mt-24`}
+  ${tw`w-full mt-11`}
 
   .medium-20 {
     ${tw`font-medium text-fontColor3 text-medium-20`}
