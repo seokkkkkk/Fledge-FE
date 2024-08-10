@@ -55,7 +55,14 @@ function Header({ memberId, nickname }: HeaderProps) {
           </ColBox>
         </RowBox>
         {memberId !== currentUserId! ? (
-          <StyledBtn main onClick={() => setIsOpenDonate(!isOpenDonate)}>
+          <StyledBtn
+            main
+            onClick={() =>
+              accessToken === ""
+                ? alert("로그인 후 이용가능한 기능입니다.")
+                : setIsOpenDonate(!isOpenDonate)
+            }
+          >
             후원하기
           </StyledBtn>
         ) : (
