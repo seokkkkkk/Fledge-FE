@@ -123,11 +123,7 @@ export const getPagingPost = async (
     url += `&q=${encodeURIComponent(keyword)}`;
   }
   try {
-    const res = await axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await axiosInstance.get(url);
     return res.data.data;
   } catch (error) {
     console.log(error);
