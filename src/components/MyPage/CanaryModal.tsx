@@ -9,7 +9,18 @@ import useAuthStore from "../../storage/useAuthStore";
 import { getPresignedUrl, uploadImageToS3 } from "../../apis/file-upload";
 import { postCanaryApply } from "../../apis/canary";
 
-const CanaryModal = ({ onClick }: { onClick: () => void }) => {
+interface postCode {
+    address: string;
+    zonecode: number | string;
+    detailAddress?: string;
+}
+
+// prop 타입 정의
+interface CanaryModalProps {
+    onClick: () => void;
+}
+
+const CanaryModal = ({ onClick }: CanaryModalProps) => {
     const { userData } = useAuthStore.getState();
     const [success, setSuccess] = useState(false);
     const [image, setImage] = useState<File | null>(null);
@@ -28,34 +39,40 @@ const CanaryModal = ({ onClick }: { onClick: () => void }) => {
         gender: true,
         address: "",
         detailAddress: "",
-        zip: "",
+        zip: "" as number | string,
         certificateFilePath: "",
         latitude: 0,
         longitude: 0,
     });
-    const handleApplyData = useCallback(
-        (data: any, key: string) => {
-            setApplyData({ ...applyData, [key]: data });
-        },
-        [applyData]
-    );
+    const handleApplyData = (value: any, field: any) => {
+        let formattedValue = value;
+
+        // 필드에 따라 포맷팅 처리
+        if (field === "phone") {
+            formattedValue = formatPhoneNumber(value);
+        }
+
+        setApplyData({
+            ...applyData,
+            [field]: formattedValue,
+        });
+    };
+
     const handleBirthData = useCallback(
         (data: any, key: string) => {
             setBirthData({ ...birthData, [key]: data });
         },
         [birthData]
     );
-    const handleAddressChange = useCallback(
-        (data: any) => {
-            setApplyData({
-                ...applyData,
-                address: data.address,
-                detailAddress: data.detailAddress,
-                zip: data.zonecode,
-            });
-        },
-        [applyData]
-    );
+
+    const handleAddressChange = (data: postCode) => {
+        setApplyData({
+            ...applyData,
+            address: data.address,
+            detailAddress: data.detailAddress!,
+            zip: data.zonecode,
+        });
+    };
 
     const handleImageChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,6 +83,26 @@ const CanaryModal = ({ onClick }: { onClick: () => void }) => {
         },
         []
     );
+
+    const formatPhoneNumber = (value: any) => {
+        // 숫자만 남기기
+        const numbersOnly = value.replace(/\D/g, "");
+
+        // 3자리, 4자리, 4자리로 나누어 하이픈 추가
+        let formattedNumber = numbersOnly;
+        if (numbersOnly.length > 3 && numbersOnly.length <= 7) {
+            formattedNumber = `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(
+                3
+            )}`;
+        } else if (numbersOnly.length > 7) {
+            formattedNumber = `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(
+                3,
+                7
+            )}-${numbersOnly.slice(7, 11)}`;
+        }
+
+        return formattedNumber;
+    };
 
     const convertToISO = (year: number, month: number, day: number): string => {
         const date = new Date(year, month - 1, day);
@@ -97,6 +134,9 @@ const CanaryModal = ({ onClick }: { onClick: () => void }) => {
             }
         }
     }, [accesstoken, applyData, image, birthData]);
+
+    console.log(applyData);
+
     return (
         <CanaryWrapper
             onClick={() => {
@@ -252,8 +292,9 @@ const ImageInput = styled.div`
         `}
         span {
             ${tw`
-                absolute left-0 top-0 w-full h-full flex items-center ml-[21px]
-            `}
+        absolute left-0 top-0 w-[500px] h-full flex items-center ml-[21px]
+        overflow-hidden whitespace-nowrap
+    `}
         }
     }
 `;

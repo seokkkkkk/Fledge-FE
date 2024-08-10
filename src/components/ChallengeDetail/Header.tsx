@@ -25,12 +25,14 @@ const Header = ({
     return (
         <Container>
             <ChallengeInfo>
-                {categories?.map((category) => (
-                    <div className="category">
-                        {challengeType.find((type) => type.id === category)
-                            ?.label || category}
-                    </div>
-                ))}
+                <div className="categories">
+                    {categories?.map((category) => (
+                        <div className="category">
+                            {challengeType.find((type) => type.id === category)
+                                ?.label || category}
+                        </div>
+                    ))}
+                </div>
                 <p className="title">{title}</p>
                 <p className="desc">{desc}</p>
             </ChallengeInfo>
@@ -80,15 +82,20 @@ const ChallengeInfo = styled.div`
     ${tw`
         w-[1280px] flex flex-col items-start
     `}
+    .categories {
+        ${tw`
+            flex gap-[8px] mb-[20px]
+        `}
+    }
     .category {
         ${tw`
             text-medium-20 font-medium text-white
-            bg-mainColor rounded-[37px] p-[1px 13px]
+            bg-mainColor rounded-[37px] p-[3px 13px] pb-[6px]
         `}
     }
     .title {
         ${tw`
-           text-bold-64 font-bold mt-[6.5px] text-fontColor1
+           text-bold-64 font-bold mt-[-20px] text-fontColor1
         `}
     }
     .desc {

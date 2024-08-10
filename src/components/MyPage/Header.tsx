@@ -107,7 +107,7 @@ const Profile = styled.div`
 
     .change-name {
         ${tw`
-            text-medium-20 font-medium text-fontColor2  underline underline-offset-4 decoration-1 cursor-pointer
+            text-medium-20 font-medium text-fontColor2  underline underline-offset-4 decoration-1 cursor-pointer mt-[10px]
         `}
     }
 `;

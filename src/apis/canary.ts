@@ -10,7 +10,7 @@ export type CanaryApplyForm = {
     gender: boolean;
     address: string;
     detailAddress: string;
-    zip: string;
+    zip: string | number;
     certificateFilePath: string;
     latitude: number;
     longitude: number;

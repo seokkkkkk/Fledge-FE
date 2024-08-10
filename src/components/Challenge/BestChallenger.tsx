@@ -5,6 +5,7 @@ import Challenger from "./Challenger";
 import { getTopParticipants } from "../../apis/challenge";
 import { useQuery } from "@tanstack/react-query";
 import { BestChallengerProps } from "../../@types/challenge";
+import NoChallenger from "../Common/NoChallenger";
 
 export const scroll = keyframes`
     from {
@@ -29,25 +30,31 @@ const BestChallenger = () => {
                 title="베스트 챌린저"
                 desc="금주의 베스트 챌린저! 베스트 챌린저는 어떤 챌린지에 참여했을까요?"
             />
-            <div className="challenger-list">
-                {topChallengersData.data.map(
-                    (challenger: BestChallengerProps, index: number) => (
-                        <Challenger
-                            key={index}
-                            imgSrc={challenger.profileImageUrl}
-                            name={challenger.nickname}
-                            desc={
-                                challenger.successCount +
-                                "/" +
-                                challenger.totalCount +
-                                "개 챌린지 성공!"
-                            }
-                            categoryList={challenger.topCategories}
-                            rank={4 - Math.floor(challenger.successRate / 30)}
-                        />
-                    )
-                )}
-            </div>
+            {topChallengersData.length > 0 ? (
+                <div className="challenger-list">
+                    {topChallengersData.data.map(
+                        (challenger: BestChallengerProps, index: number) => (
+                            <Challenger
+                                key={index}
+                                imgSrc={challenger.profileImageUrl}
+                                name={challenger.nickname}
+                                desc={
+                                    challenger.successCount +
+                                    "/" +
+                                    challenger.totalCount +
+                                    "개 챌린지 성공!"
+                                }
+                                categoryList={challenger.topCategories}
+                                rank={
+                                    4 - Math.floor(challenger.successRate / 30)
+                                }
+                            />
+                        )
+                    )}
+                </div>
+            ) : (
+                <NoChallenger text="베스트" />
+            )}
         </Container>
     );
 };
