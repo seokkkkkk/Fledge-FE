@@ -67,7 +67,7 @@ function DonateModal({ onClose }: { onClose: () => void }) {
       account
     );
 
-    if (res.success) {
+    if (res.status === 200) {
       setIsFinished(true);
     }
   };
@@ -75,7 +75,7 @@ function DonateModal({ onClose }: { onClose: () => void }) {
     return (
       <Overlay onClick={onClose}>
         {!isFinished ? (
-          <Wrapper>
+          <Wrapper onClick={(e) => e.stopPropagation()}>
             <InputForm onSubmit={handleSubmit(onSubmitHandler)}>
               <span className="d-day">D-{data.leftDays}</span>
               <span className="bold-36">{data.title}</span>
@@ -117,7 +117,7 @@ function DonateModal({ onClose }: { onClose: () => void }) {
             </InputForm>
           </Wrapper>
         ) : (
-          <Wrapper>
+          <Wrapper onClick={(e) => e.stopPropagation()}>
             <span className="bold-36">후원이 완료되었습니다.</span>
             <span className="medium-20">
               {nickname} 후원자님의 보탬이 {data.nickname} 님에게 큰 도움이

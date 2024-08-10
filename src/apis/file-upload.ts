@@ -1,5 +1,6 @@
 import axios from "axios";
 import { CommonError } from "../@types/api";
+import { axiosInstance } from ".";
 
 export const getPresignedUrl = async (
   prefix: string,
@@ -7,15 +8,12 @@ export const getPresignedUrl = async (
   accesstoken: string
 ) => {
   try {
-    const res = await axios.get(
-      `/api/v1/files/presigned-url?prefix=images/${prefix}&fileName=${fileName}`,
+    const res = await axiosInstance.get(
+      `/files/presigned-url?prefix=images/${prefix}&fileName=${fileName}`,
       {
         headers: {
           Authorization: `Bearer ${accesstoken}`,
-          // 다른 헤더를 추가할 수 있습니다.
-          "Content-Type": "application/json",
         },
-        withCredentials: true,
       }
     );
     return res.data;

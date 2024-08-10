@@ -12,7 +12,7 @@ function ContentDetail({ data }: ContentDetailProps) {
     <Container>
       <RowBox className="justify-between items-center">
         <span className="d-day">D-{data.leftDays}</span>
-        <ColBox className="justify-end">
+        <ColBox className="justify-end ">
           <label className="medium-20">후원기간</label>
           <span className="medium-20">{data.expirationDate}</span>
         </ColBox>
@@ -64,7 +64,7 @@ const Container = styled.div`
     ${tw`font-bold text-bold-64 text-subColor`}
   }
   .medium-20 {
-    ${tw`font-medium text-fontColor3 text-medium-20 w-[79px]`}
+    ${tw`font-medium text-fontColor3 text-medium-20 `}
   }
   .title {
     ${tw`font-bold text-bold-48 text-fontColor1`}
