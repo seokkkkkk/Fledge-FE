@@ -10,7 +10,7 @@ export const postAddressItem = async (
 ) => {
   try {
     const res = await axiosInstance.post(
-      "/api/v1/supports",
+      "/supports",
       {
         title: data.title,
         reason: data.reason,
@@ -52,7 +52,7 @@ export const postAccountItem = async (
 ) => {
   try {
     const res = await axiosInstance.post(
-      "/api/v1/supports",
+      "/supports",
       {
         title: data.title,
         reason: data.reason,
@@ -89,7 +89,7 @@ export const postAccountItem = async (
 
 export const getAddress = async (accesstoken: string) => {
   try {
-    const res = await axiosInstance.get("/api/v1/canary/delivery", {
+    const res = await axiosInstance.get("/canary/delivery", {
       headers: {
         Authorization: `Bearer ${accesstoken}`,
         // 다른 헤더를 추가할 수 있습니다.
@@ -118,7 +118,7 @@ export const getPagingPost = async (
     .map((category) => `category=${encodeURIComponent(category)}`)
     .join("&");
 
-  let url = `/api/v1/public/supports/paging?page=${page}&${queryCategoryString}&status=${status}`;
+  let url = `/public/supports/paging?page=${page}&${queryCategoryString}&status=${status}`;
   if (keyword) {
     url += `&q=${encodeURIComponent(keyword)}`;
   }
@@ -143,7 +143,7 @@ export const getPagingPost = async (
 export const getDeadlinePost = async () => {
   try {
     const res = await axiosInstance.get(
-      `/api/v1/public/supports/deadline-approaching`
+      `/public/supports/deadline-approaching`
     );
     return res.data.data;
   } catch (error) {
@@ -158,7 +158,7 @@ export const getDeadlinePost = async () => {
 
 export const getSupportsInfo = async (supportId: string) => {
   try {
-    const res = await axiosInstance.get(`/api/v1/public/supports/${supportId}`);
+    const res = await axiosInstance.get(`/public/supports/${supportId}`);
     return res.data.data;
   } catch (error) {
     console.log(error);
@@ -173,7 +173,7 @@ export const getSupportsInfo = async (supportId: string) => {
 export const getProgressInfo = async (supportId: string) => {
   try {
     const res = await axiosInstance.get(
-      `/api/v1/public/supports/${supportId}/progress`
+      `/public/supports/${supportId}/progress`
     );
     return res.data.data;
   } catch (error) {
@@ -188,7 +188,7 @@ export const getProgressInfo = async (supportId: string) => {
 
 export const getCanaryInfo = async (memberId: number) => {
   try {
-    const res = await axiosInstance.get(`/api/v1/canary/${memberId}/supports`);
+    const res = await axiosInstance.get(`/canary/${memberId}/supports`);
     return res.data.data;
   } catch (error) {
     console.log(error);
@@ -205,7 +205,7 @@ export const deleteSupportPost = async (
   accesstoken: string
 ) => {
   try {
-    const res = await axiosInstance.delete(`/api/v1/supports/${supportId}`, {
+    const res = await axiosInstance.delete(`/supports/${supportId}`, {
       headers: {
         Authorization: `Bearer ${accesstoken}`,
       },
@@ -231,7 +231,7 @@ export const postDonate = async (
   const bankName = banks.find((b) => b.id === bankcode);
   try {
     const res = await axiosInstance.post(
-      `/api/v1/supports/${supportId}/record`,
+      `/supports/${supportId}/record`,
       {
         bankName: bankName?.label,
         bankCode: bankcode,
@@ -259,14 +259,11 @@ export const postDonate = async (
 
 export const getUpdate = async (supportId: string, accesstoken: string) => {
   try {
-    const res = await axiosInstance.get(
-      `/api/v1/supports/${supportId}/update`,
-      {
-        headers: {
-          Authorization: `Bearer ${accesstoken}`,
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/supports/${supportId}/update`, {
+      headers: {
+        Authorization: `Bearer ${accesstoken}`,
+      },
+    });
     return res.data;
   } catch (error) {
     console.log(error);
@@ -285,7 +282,7 @@ export const updateAddressItem = async (
 ) => {
   try {
     const res = await axiosInstance.put(
-      `/api/v1/supports/${supportId}`,
+      `/supports/${supportId}`,
       {
         title: data.title,
         reason: data.reason,
@@ -328,7 +325,7 @@ export const updateAccountItem = async (
 ) => {
   try {
     const res = await axiosInstance.put(
-      `/api/v1/supports/${supportId}`,
+      `/supports/${supportId}`,
       {
         title: data.title,
         reason: data.reason,
