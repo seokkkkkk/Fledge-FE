@@ -25,17 +25,16 @@ function Header({ memberId, nickname }: HeaderProps) {
   // });
   const navigate = useNavigate();
   const { supportId } = useParams<{ supportId: string }>();
-  const accessToken = useAuthStore((state) => state.accessToken!);
-  console.log(isOpenDonate);
+  const accessToken = useAuthStore((state) => state.accessToken);
   // 수정하기 클릭시 함수 호출
-  const handleUpdate = async () => {
-    const res = await getUpdate(supportId!, accessToken);
-    if (res.success) {
-      navigate("/sponsor-register", {
-        state: { data: res.data, mode: "update" },
-      });
-    }
-  };
+  // const handleUpdate = async () => {
+  //   const res = await getUpdate(supportId!, accessToken);
+  //   if (res.success) {
+  //     navigate("/sponsor-register", {
+  //       state: { data: res.data, mode: "update" },
+  //     });
+  //   }
+  // };
   return (
     <>
       <Container>

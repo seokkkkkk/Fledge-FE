@@ -45,6 +45,9 @@ function DonateModal({ onClose }: { onClose: () => void }) {
     formState: { isValid },
   } = useForm<FormValue>({
     mode: "onChange",
+    defaultValues: {
+      bank: "001",
+    },
   });
   const accessToken = useAuthStore((state) => state.accessToken);
   const { nickname } = useAuthStore.getState().userData;
@@ -53,7 +56,7 @@ function DonateModal({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
   const onSubmitHandler: SubmitHandler<FormValue> = async () => {
     const { amount, bank, account } = getValues();
-
+    console.log(amount, bank, account);
     if (!bank || !account) {
       alert("은행명 정보와 계좌번호를 입력해 주세요.");
       return; // 요청 보내지 않음
@@ -67,10 +70,13 @@ function DonateModal({ onClose }: { onClose: () => void }) {
       account
     );
 
-    if (res.status === 200) {
+    if (res.success) {
       setIsFinished(true);
+      console.log(isFinished);
     }
   };
+  console.log(isFinished);
+
   if (!isLoading && !isProgressLoading && data && ProgressData) {
     return (
       <Overlay onClick={onClose}>
@@ -103,12 +109,8 @@ function DonateModal({ onClose }: { onClose: () => void }) {
                 <AccountForm
                   bankValue={watch("bank")}
                   accountValue={watch("account")}
-                  onBankChange={(value) =>
-                    setValue("bank", value, { shouldValidate: true })
-                  }
-                  onAccountChange={(value) =>
-                    setValue("account", value, { shouldValidate: true })
-                  }
+                  onBankChange={(value) => setValue("bank", value)}
+                  onAccountChange={(value) => setValue("account", value)}
                 />
                 <Button type="submit" disabled={!isValid}>
                   후원하기
