@@ -63,7 +63,11 @@ function AddressSection({ serverData }: AddressSectionProps) {
         />
       </div>
       {/* 우편번호검색 */}
-      <PostalCode initialAddress={addressData} onChange={handleAddressChange} />
+      <PostalCode
+        initialAddress={addressData}
+        onChange={handleAddressChange}
+        sponsor={true}
+      />
 
       <AddressFormContainer className="w-[650px]">
         <InputBox className="w-[300px]">
