@@ -52,32 +52,18 @@ const Certification = ({ title, challengeId }: CertificationProps) => {
                     desc={`'${title}’ 챌린지를 달성하기 위해 총 ${ChallengeProofData.data.totalProofs}번의 인증이 필요해요.`}
                 />
                 <StyledSwiper spaceBetween={23} slidesPerView={4}>
-                    <ProofSlide>
-                        <div className="certification-item">
-                            <img
-                                src={"https://via.placeholder.com/301x415"}
-                                alt="certification"
-                            />
-                            <div className="description">
-                                <p className="title-text">첫 번째 인증</p>
-                                <p className="sub-text">
-                                    성냥팔이소녀를 읽고 주인공과 나를 비교하여
-                                    비슷한 점과 다른 점을
-                                </p>
-                            </div>
-                        </div>
-                    </ProofSlide>
                     {ChallengeProofData.data.proofDetailResponses.map(
                         (proof: any, index: number) => (
                             <div key={index}>
                                 {proof.status ? (
                                     <ProofSlide>
                                         <div className="certification-item">
+                                            <Background />
                                             <img
                                                 src={
                                                     proof.proofImageUrl
                                                         ? proof.proofImageUrl
-                                                        : "https://via.placeholder.com/301x415"
+                                                        : "https://via.placeholder.com/100x100"
                                                 }
                                                 alt="certification"
                                             />
@@ -135,9 +121,14 @@ const Certification = ({ title, challengeId }: CertificationProps) => {
 
 export default Certification;
 
+const Background = styled.div`
+    ${tw`absolute inset-0 [border-radius: 16px] flex flex-col`}
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 10.44%, rgba(0, 0, 0, 0.5) 120.07%);
+`;
+
 const ProofSlide = styled(SwiperSlide)`
     ${tw`
-        relative
+        relative object-contain
     `}
     .description {
         ${tw`
@@ -156,6 +147,11 @@ const ProofSlide = styled(SwiperSlide)`
             -webkit-line-clamp: 2; /* Number of lines to show */
             -webkit-box-orient: vertical;
         }
+    }
+    img {
+        ${tw`
+            object-contain
+        `}
     }
 `;
 
