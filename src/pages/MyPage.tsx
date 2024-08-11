@@ -127,8 +127,10 @@ function MyPage() {
     });
 
     useEffect(() => {
-        if (applyStatus.data === 2) {
-            setIsCanary(true);
+        if (!isLoading) {
+            if (applyStatus.data === 2) {
+                setIsCanary(true);
+            }
         }
     }, [applyStatus]);
 
